@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>teamsonic2011's super cool website</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=DynaPuff">
+  <style>
+    .image-row {
+      display: flex;
+      justify-content: center;
+    }
+    body {
+      font-family: DynaPuff, sans-serif;
+      background-color: #0491FF;
+      color: #FFF;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+    body {
+      background-image: url('5028.png');
+      background-repeat: repeat;
+    }
+    header {
+      background-color: #fff;
+      padding: 20px;
+    }
+    header h1 {
+      margin: 0;
+      color: #fff;
+    }
+    main {
+      padding: 20px;
+    }
+    .link-button:hover {
+      background-color: #ff6347;
+    }
+    /* Additional styles for the TV guide */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+    th, td {
+      padding: 10px;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+    th {
+      background: #333;
+      color: #fff;
+    }
+    .channel {
+      font-weight: bold;
+      background: #e3e3e3;
+    }
+    .time-slot {
+      white-space: nowrap;
+    }
+  </style>
+  <script type="text/javascript" src="scripts/downcheck.js"></script>
+</head>
+
+<body>
+  <div class="image-row">
+    <a href="/"><img src="assets/1000001462.png" width="100%" height="75%"></a>
+    <a href="about.html"><img src="assets/about.png" width="100%" height="75%"></a>
+    <a href="stuff.html"><img src="assets/stuff.png" width="100%" height="75%"></a>
+  </div>
+  
+  <header>
+    <h1>teamsonic2011's super cool website</h1>
+  </header>
+  
+  <div class="container">
+    <table id="tvGuide">
+      <thead>
+        <tr>
+          <th>Channel</th>
+          <th>Show</th>
+          <th>Time</th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+  </div>
+  
+  <script>
+    async function fetchTVListings() {
+      try {
+        const response = await fetch('https://api.tvmaze.com/schedule?country=US');
+        const data = await response.json();
+        console.log("Fetched data:", data);
+
+        const tableBody = document.getElementById('tvGuide').getElementsByTagName('tbody')[0];
+        tableBody.innerHTML = '';
+
+        const currentTime = new Date();
+        const channels = {};
+
+        data.forEach(show => {
+          if (!show.show.network) return;
+
+          const network = show.show.network.name;
+          const airtime = new Date(`${show.airdate}T${show.airtime}`);
+          console.log("Processing show:", show.show.name, "on", network, "at", airtime);
+
+          if (airtime < currentTime) return; // Skip shows that have already aired
+
+          if (!channels[network]) {
+            channels[network] = [];
+          }
+
+          channels[network].push({
+            name: show.show.name,
+            time: airtime
+          });
+        });
+
+        console.log("Channels:", channels);
+
+        for (const channel in channels) {
+          channels[channel].sort((a, b) => a.time - b.time);
+
+          const row = tableBody.insertRow();
+          const cell = row.insertCell(0);
+          cell.textContent = channel;
+          cell.className = "channel";
+
+          channels[channel].forEach(show => {
+            const timeCell = row.insertCell(row.cells.length);
+            timeCell.textContent = `${show.time.toLocaleTimeString('en-US', {
+              hour: '2-digit',
+              minute: '2-digit'
+            })} - ${show.name}`;
+          });
+        }
+
+        if (Object.keys(channels).length === 0) {
+          const row = tableBody.insertRow();
+          const cell = row.insertCell(0);
+          cell.colSpan = 3;
+          cell.textContent = "No listings available.";
+        }
+      } catch (error) {
+        console.error('Error fetching TV listings:', error);
+      }
+    }
+
+    fetchTVListings();
+    setInterval(fetchTVListings, 60000);
+  </script>
+</body>
+</html>
