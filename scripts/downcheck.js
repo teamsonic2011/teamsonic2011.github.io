@@ -10,7 +10,7 @@
             throw new Error('Network response was not ok');
           }
           const status = await response.text();
-          if (status.trim() === '1') {
+          if (status.trim() == '1') {
             window.location.href = '/maintenance.html';
           }
         } catch (error) {
