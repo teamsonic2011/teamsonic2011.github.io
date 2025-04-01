@@ -1,2 +1,24 @@
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 100px;
+        }
+
+        .hidden-link {
+            opacity: 0;
+            transition: opacity 2s ease-in-out;
+        }
+    </style>
+    <script>
+        window.onload = function() {
+            setTimeout(function() {
+                document.querySelector('.hidden-link').style.opacity = 1;
+            }, 3000); // Link fades in after 3 seconds
+        };
+    </script>
+</head>
+<body>
 <h2>shhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh</h2>
 <h6>april 5th</h6>
+  <a class="hidden-link" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank">if you're really impatient, click here</a>
