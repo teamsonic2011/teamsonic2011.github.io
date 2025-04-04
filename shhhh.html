@@ -1,24 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Mystery Awaits...</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: "Courier New", monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: #000;
+            color: #00ff99;
             text-align: center;
-            margin-top: 100px;
+            flex-direction: column;
         }
-
-        .hidden-link {
+        #countdown {
+            font-size: 2.5em;
+            font-weight: bold;
+        }
+        .message {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            opacity: 0.8;
+        }
+        .impatient-link {
+            font-size: 1em;
+            margin-top: 20px;
+            color: #ff0044;
+            text-decoration: none;
             opacity: 0;
-            transition: opacity 2s ease-in-out;
+            transition: opacity 3s ease-in;
+        }
+        .impatient-link:hover {
+            text-decoration: underline;
         }
     </style>
-    <script>
-        window.onload = function() {
-            setTimeout(function() {
-                document.querySelector('.hidden-link').style.opacity = 1;
-            }, 5000); // Link fades in after 3 seconds
-        };
-    </script>
 </head>
 <body>
-<h2>shhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh</h2>
-<h6>april 5th</h6>
-  <a class="hidden-link" href="https://youtu.be/xvFZjo5PgG0?si=l6xynH1pVzZyZ6PP" target="_blank">if you're really impatient, click here</a>
+    <div>
+        <div class="message">The mystery will be revealed in...</div>
+        <div id="countdown">Loading...</div>
+    </div>
+    <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" class="impatient-link" id="link">If you're impatient, click here</a>
+
+    <script>
+        function updateCountdown() {
+            let now = new Date();
+            let tomorrow = new Date();
+            tomorrow.setDate(now.getDate() + 1);
+            tomorrow.setHours(9, 0, 0, 0);
+
+            let timeLeft = tomorrow - now;
+            if (timeLeft > 0) {
+                let hours = Math.floor(timeLeft / (1000 * 60 * 60));
+                let minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                let seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+                document.getElementById("countdown").textContent =
+                    `${hours}h ${minutes}m ${seconds}s`;
+            } else {
+                document.getElementById("countdown").textContent = "The truth is here...";
+            }
+        }
+
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        setTimeout(() => {
+            document.getElementById("link").style.opacity = 1;
+        }, 5000); // Link fades in after 5 seconds
+    </script>
+</body>
+</html>
